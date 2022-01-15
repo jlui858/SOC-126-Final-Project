@@ -1,0 +1,34 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+fbdata <- read.csv("df_edges.csv")
+fbdata_attributes <- read.csv("df_nodes.csv")
+fbdataglobal <- read.csv("fb-pages-politician.nodes")
+fbdataglboal <- fbdataglobal[,c("new_id", "name", "id")]
+
+install.packages("tidyverse")
+library(tidyverse)
+library(igraph)
+
+List <- c(fbdata$first_column, fbdata$second_column)
+fbdataglobal <- fbdataglobal[fbdataglobal$new_id%in%List,]
+
+graph <- graph_from_data_frame(
+  fbdata,
+  vertices = fbdataglboal,
+  directed = F
+)
+
+V(graph)$color <- NA
+set.seed(5)
+layout.fr <- layout.fruchterman.reingold(graph, niter=10000)
+plot(graph,
+     layout = layout.fr,
+     vertex.size=5,
+     vertx.label.cex = 0.40)
+
+
+
+```
